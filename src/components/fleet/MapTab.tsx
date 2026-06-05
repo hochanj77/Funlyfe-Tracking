@@ -5,6 +5,15 @@ import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// Hide Leaflet attribution control
+const hideAttribution = `.leaflet-control-attribution{display:none !important;}`;
+if (typeof document !== "undefined" && !document.getElementById("hide-leaflet-attr")) {
+  const s = document.createElement("style");
+  s.id = "hide-leaflet-attr";
+  s.textContent = hideAttribution;
+  document.head.appendChild(s);
+}
+
 const NEWARK_CENTER: [number, number] = [40.7282, -74.1724];
 
 function makeIcon(hex: string, initials: string, dimmed = false) {
