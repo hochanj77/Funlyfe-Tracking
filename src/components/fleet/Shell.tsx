@@ -60,8 +60,8 @@ export function Shell({ role, onLogout }: { role: Role; onLogout: () => void }) 
 
         {menuOpen && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-            <div className="absolute right-3 top-14 z-50 w-52 bg-card border border-border rounded-xl shadow-lg overflow-hidden">
+            <div className="fixed inset-0 z-[1000]" onClick={() => setMenuOpen(false)} />
+            <div className="absolute right-3 top-14 z-[1001] w-52 bg-card text-foreground border border-border rounded-xl shadow-lg overflow-hidden">
               <div className="px-3 py-2 text-xs text-muted-foreground border-b border-border">
                 Signed in as <span className="font-medium text-foreground capitalize">{role}</span>
               </div>
