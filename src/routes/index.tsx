@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Login } from "@/components/fleet/Login";
 import { Shell } from "@/components/fleet/Shell";
 
 export const Route = createFileRoute("/")({
@@ -15,10 +13,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Role = "owner" | "worker";
-
 function Index() {
-  const [role, setRole] = useState<Role | null>(null);
-  if (!role) return <Login onLogin={setRole} />;
-  return <Shell role={role} onLogout={() => setRole(null)} />;
+  return <Shell role="owner" onLogout={() => {}} />;
 }
