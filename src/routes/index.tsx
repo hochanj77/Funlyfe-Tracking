@@ -4,9 +4,9 @@ import { Shell } from "@/components/fleet/Shell";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FleetTrack — Manage your drivers" },
+      { title: "Funlyfe — Manage your drivers" },
       { name: "description", content: "Mobile-first fleet management for owners and drivers." },
-      { property: "og:title", content: "FleetTrack" },
+      { property: "og:title", content: "Funlyfe" },
       { property: "og:description", content: "Mobile-first fleet management for owners and drivers." },
     ],
   }),
