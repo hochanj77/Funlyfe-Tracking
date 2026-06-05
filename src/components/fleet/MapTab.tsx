@@ -1,41 +1,104 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { ChevronDown, ChevronUp, Navigation } from "lucide-react";
-import { drivers } from "@/lib/mock-data";
+import { drivers, type Driver } from "@/lib/mock-data";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-function MapCanvas({ pins }: { pins: { id: string; x: number; y: number; color: string; initials: string; label?: boolean }[] }) {
+const NEWARK_CENTER: [number, number] = [40.7282, -74.1724];
+
+function makeIcon(hex: string, initials: string, dimmed = false) {
+  const color = dimmed ? "#94a3b8" : hex;
+  const html = `
+    <div style="position:relative;transform:translate(-50%,-100%);">
+      <div style="height:34px;width:34px;border-radius:9999px;background:${color};color:white;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;border:2px solid white;box-shadow:0 4px 12px rgba(0,0,0,.25);">${initials}</div>
+      <div style="width:8px;height:8px;background:white;transform:rotate(45deg);margin:-4px auto 0;border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;"></div>
+      <div style="position:absolute;inset:auto 0 8px 0;margin:auto;width:34px;height:34px;border-radius:9999px;background:${color};opacity:.35;animation:pulse-ring 2s ease-out infinite;pointer-events:none;"></div>
+    </div>
+    <style>@keyframes pulse-ring{0%{transform:scale(.6);opacity:.5}100%{transform:scale(2);opacity:0}}</style>
+  `;
+  return L.divIcon({ html, className: "", iconSize: [0, 0] });
+}
+
+type LiveDriver = Driver & { live: { lat: number; lng: number } };
+
+function AnimatedMarker({ d, dimmed }: { d: LiveDriver; dimmed: boolean }) {
+  const icon = useMemo(() => makeIcon(d.hex, d.initials, dimmed), [d.hex, d.initials, dimmed]);
+  return <Marker position={[d.live.lat, d.live.lng]} icon={icon} />;
+}
+
+function FitBounds({ coords }: { coords: [number, number][] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (coords.length) map.fitBounds(coords, { padding: [40, 40] });
+  }, [map, coords]);
+  return null;
+}
+
+function useAnimatedDrivers(source: Driver[]) {
+  const [live, setLive] = useState(() =>
+    source.map((d) => ({ ...d, live: { ...d.coords } }))
+  );
+  const targets = useRef(source.map((d) => ({ ...d.coords })));
+
+  useEffect(() => {
+    const pickTarget = (i: number) => {
+      const base = source[i].coords;
+      targets.current[i] = {
+        lat: base.lat + (Math.random() - 0.5) * 0.008,
+        lng: base.lng + (Math.random() - 0.5) * 0.008,
+      };
+    };
+    const id = setInterval(() => {
+      setLive((prev) =>
+        prev.map((d, i) => {
+          const t = targets.current[i];
+          const dLat = t.lat - d.live.lat;
+          const dLng = t.lng - d.live.lng;
+          if (Math.abs(dLat) < 0.0002 && Math.abs(dLng) < 0.0002) pickTarget(i);
+          return {
+            ...d,
+            live: {
+              lat: d.live.lat + dLat * 0.05,
+              lng: d.live.lng + dLng * 0.05,
+            },
+          };
+        })
+      );
+    }, 80);
+    return () => clearInterval(id);
+  }, [source]);
+
+  return live;
+}
+
+function MapCanvas({ drivers: list, focused }: { drivers: Driver[]; focused: string | null }) {
+  const live = useAnimatedDrivers(list);
+  const bounds = useMemo(
+    () => list.map((d) => [d.coords.lat, d.coords.lng] as [number, number]),
+    [list]
+  );
+
   return (
-    <div className="relative w-full h-[55vh] bg-muted overflow-hidden">
-      {/* Faux map grid */}
-      <div
-        className="absolute inset-0 opacity-60"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, color-mix(in oklab, var(--border) 80%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--border) 80%, transparent) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-      {/* Faux roads */}
-      <div className="absolute left-0 right-0 top-1/3 h-3 bg-card/80" />
-      <div className="absolute left-0 right-0 top-2/3 h-2 bg-card/70" />
-      <div className="absolute top-0 bottom-0 left-1/3 w-3 bg-card/80" />
-      <div className="absolute top-0 bottom-0 left-2/3 w-2 bg-card/70" />
-
-      <div className="absolute top-3 left-3 bg-card/90 backdrop-blur px-2.5 py-1 rounded-md text-[11px] text-muted-foreground border border-border">
-        Live Map
+    <div className="relative w-full h-[55vh] overflow-hidden">
+      <MapContainer
+        center={NEWARK_CENTER}
+        zoom={13}
+        scrollWheelZoom={false}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        />
+        {list.length > 1 && <FitBounds coords={bounds} />}
+        {live.map((d) => (
+          <AnimatedMarker key={d.id} d={d} dimmed={!!focused && focused !== d.id} />
+        ))}
+      </MapContainer>
+      <div className="absolute top-3 left-3 z-[400] bg-card/90 backdrop-blur px-2.5 py-1 rounded-md text-[11px] text-muted-foreground border border-border shadow-sm">
+        Live Map · Newark, NJ
       </div>
-
-      {pins.map((p) => (
-        <div
-          key={p.id}
-          className="absolute -translate-x-1/2 -translate-y-full"
-          style={{ left: `${p.x}%`, top: `${p.y}%` }}
-        >
-          <div className={`h-8 w-8 rounded-full ${p.color} text-white text-[11px] font-semibold flex items-center justify-center border-2 border-card shadow-md`}>
-            {p.initials}
-          </div>
-          <div className="mx-auto h-2 w-2 rotate-45 -mt-1 bg-card border-r border-b border-border" />
-        </div>
-      ))}
     </div>
   );
 }
@@ -53,11 +116,11 @@ export function OwnerMap() {
           <div className="font-semibold">{active.length} drivers active</div>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live
         </div>
       </div>
 
-      <MapCanvas pins={drivers.map((d) => ({ id: d.id, x: d.pin.x, y: d.pin.y, color: focused && focused !== d.id ? "bg-slate-400" : d.color, initials: d.initials }))} />
+      <MapCanvas drivers={drivers} focused={focused} />
 
       <div className="px-4 pt-4">
         <button
@@ -103,7 +166,7 @@ export function WorkerMap() {
         <div className="text-xs text-muted-foreground">Your route</div>
         <div className="font-semibold">{me.route}</div>
       </div>
-      <MapCanvas pins={[{ id: me.id, x: me.pin.x, y: me.pin.y, color: me.color, initials: me.initials }]} />
+      <MapCanvas drivers={[me]} focused={null} />
       <div className="px-4 pt-4 space-y-3">
         <div className="p-4 rounded-xl border border-border">
           <div className="flex items-center gap-2 text-sm font-medium">
