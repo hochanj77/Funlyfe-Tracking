@@ -1,29 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Login } from "@/components/fleet/Login";
+import { Shell } from "@/components/fleet/Shell";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "FleetTrack — Manage your drivers" },
+      { name: "description", content: "Mobile-first fleet management for owners and drivers." },
+      { property: "og:title", content: "FleetTrack" },
+      { property: "og:description", content: "Mobile-first fleet management for owners and drivers." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+type Role = "owner" | "worker";
+
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  const [role, setRole] = useState<Role | null>(null);
+  if (!role) return <Login onLogin={setRole} />;
+  return <Shell role={role} onLogout={() => setRole(null)} />;
 }
