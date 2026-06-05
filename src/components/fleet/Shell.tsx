@@ -37,12 +37,12 @@ export function Shell({ role, onLogout }: { role: Role; onLogout: () => void }) 
   return (
     <div className="min-h-screen flex flex-col bg-background max-w-md mx-auto border-x border-border relative">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-card/95 backdrop-blur border-b border-border px-4 h-14 flex items-center justify-between">
+      <header className="sticky top-0 z-30 bg-card/95 backdrop-blur border-b border-border px-4 h-14 flex items-center justify-between transition-colors duration-300">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
             <Truck className="h-4 w-4 text-primary-foreground" />
           </div>
-          <div className="font-semibold">FleetTrack</div>
+          <div className="font-semibold">Funlyfe</div>
           <span
             className={`ml-1 text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full ${
               role === "owner" ? "bg-primary/10 text-primary" : "bg-emerald-100 text-emerald-700"
