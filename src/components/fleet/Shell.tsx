@@ -37,7 +37,7 @@ export function Shell({ role, onLogout }: { role: Role; onLogout: () => void }) 
   return (
     <div className="min-h-screen flex flex-col bg-background max-w-md mx-auto border-x border-border relative">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-primary text-primary-foreground backdrop-blur border-b border-primary/30 px-4 h-14 flex items-center justify-between transition-colors duration-300">
+      <header className="sticky top-0 z-[1100] bg-primary text-primary-foreground backdrop-blur border-b border-primary/30 px-4 h-14 flex items-center justify-between transition-colors duration-300">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-white/15 flex items-center justify-center">
             <Truck className="h-4 w-4 text-primary-foreground" />
