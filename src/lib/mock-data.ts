@@ -17,10 +17,6 @@ export const drivers: Driver[] = [
   { id: "d3", name: "James Okafor", initials: "JO", phone: "(555) 776-1188", vehicle: "Truck 07", route: "Route C · North", online: true, location: "Highway 9 North", color: "bg-amber-500", pin: { x: 72, y: 55 } },
   { id: "d4", name: "Priya Shah", initials: "PS", phone: "(555) 309-4421", vehicle: "Van 03", route: "Route D · Airport", online: true, location: "Terminal 2", color: "bg-rose-500", pin: { x: 40, y: 65 } },
   { id: "d5", name: "Liam O'Brien", initials: "LO", phone: "(555) 661-9087", vehicle: "Truck 11", route: "Route E · Harbor", online: false, location: "Last seen: Pier 4", color: "bg-violet-500", pin: { x: 18, y: 72 } },
-  { id: "d6", name: "Aiko Tanaka", initials: "AT", phone: "(555) 224-5510", vehicle: "Van 08", route: "Route F · East", online: true, location: "Park Blvd", color: "bg-cyan-500", pin: { x: 82, y: 38 } },
-  { id: "d7", name: "Diego Martinez", initials: "DM", phone: "(555) 138-2244", vehicle: "Truck 02", route: "Route G · South", online: true, location: "Market St", color: "bg-orange-500", pin: { x: 50, y: 50 } },
-  { id: "d8", name: "Hannah Weiss", initials: "HW", phone: "(555) 994-3321", vehicle: "Van 15", route: "Route H · Loop", online: true, location: "Civic Center", color: "bg-pink-500", pin: { x: 35, y: 22 } },
-  { id: "d9", name: "Noah Bennett", initials: "NB", phone: "(555) 552-8810", vehicle: "Truck 09", route: "Route I · Express", online: false, location: "Offline since 7:42 AM", color: "bg-slate-500", pin: { x: 65, y: 78 } },
 ];
 
 export type Attendance = "present" | "absent" | "pending";
@@ -30,10 +26,6 @@ export const attendance: Record<string, { status: Attendance; time?: string }> =
   d3: { status: "present", time: "7:03 AM" },
   d4: { status: "present", time: "6:58 AM" },
   d5: { status: "absent" },
-  d6: { status: "present", time: "7:11 AM" },
-  d7: { status: "present", time: "6:39 AM" },
-  d8: { status: "present", time: "7:22 AM" },
-  d9: { status: "pending" },
 };
 
 export type Conversation = {
