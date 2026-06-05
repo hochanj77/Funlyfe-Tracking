@@ -9,14 +9,17 @@ export type Driver = {
   location: string;
   color: string;
   pin: { x: number; y: number };
+  coords: { lat: number; lng: number };
+  hex: string;
 };
 
+// Coordinates around Newark, NJ
 export const drivers: Driver[] = [
-  { id: "d1", name: "Marcus Chen", initials: "MC", phone: "(555) 201-3344", vehicle: "Truck 04", route: "Route A · Downtown", online: true, location: "5th Ave & Main St", color: "bg-blue-500", pin: { x: 25, y: 40 } },
-  { id: "d2", name: "Sofia Reyes", initials: "SR", phone: "(555) 482-9120", vehicle: "Van 12", route: "Route B · Warehouse", online: true, location: "Industrial Park", color: "bg-emerald-500", pin: { x: 60, y: 28 } },
-  { id: "d3", name: "James Okafor", initials: "JO", phone: "(555) 776-1188", vehicle: "Truck 07", route: "Route C · North", online: true, location: "Highway 9 North", color: "bg-amber-500", pin: { x: 72, y: 55 } },
-  { id: "d4", name: "Priya Shah", initials: "PS", phone: "(555) 309-4421", vehicle: "Van 03", route: "Route D · Airport", online: true, location: "Terminal 2", color: "bg-rose-500", pin: { x: 40, y: 65 } },
-  { id: "d5", name: "Liam O'Brien", initials: "LO", phone: "(555) 661-9087", vehicle: "Truck 11", route: "Route E · Harbor", online: false, location: "Last seen: Pier 4", color: "bg-violet-500", pin: { x: 18, y: 72 } },
+  { id: "d1", name: "Marcus Chen", initials: "MC", phone: "(555) 201-3344", vehicle: "Truck 04", route: "Route A · Downtown", online: true, location: "Broad St & Market St", color: "bg-blue-500", hex: "#3b82f6", pin: { x: 25, y: 40 }, coords: { lat: 40.7357, lng: -74.1724 } },
+  { id: "d2", name: "Sofia Reyes", initials: "SR", phone: "(555) 482-9120", vehicle: "Van 12", route: "Route B · Ironbound", online: true, location: "Ferry St", color: "bg-emerald-500", hex: "#10b981", pin: { x: 60, y: 28 }, coords: { lat: 40.7282, lng: -74.1573 } },
+  { id: "d3", name: "James Okafor", initials: "JO", phone: "(555) 776-1188", vehicle: "Truck 07", route: "Route C · North Newark", online: true, location: "Mt Prospect Ave", color: "bg-amber-500", hex: "#f59e0b", pin: { x: 72, y: 55 }, coords: { lat: 40.7610, lng: -74.1810 } },
+  { id: "d4", name: "Priya Shah", initials: "PS", phone: "(555) 309-4421", vehicle: "Van 03", route: "Route D · Airport", online: true, location: "Newark Liberty Intl", color: "bg-rose-500", hex: "#f43f5e", pin: { x: 40, y: 65 }, coords: { lat: 40.6895, lng: -74.1745 } },
+  { id: "d5", name: "Liam O'Brien", initials: "LO", phone: "(555) 661-9087", vehicle: "Truck 11", route: "Route E · Port Newark", online: false, location: "Last seen: Port St", color: "bg-violet-500", hex: "#8b5cf6", pin: { x: 18, y: 72 }, coords: { lat: 40.6920, lng: -74.1390 } },
 ];
 
 export type Attendance = "present" | "absent" | "pending";
